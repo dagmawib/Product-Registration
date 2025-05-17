@@ -38,7 +38,7 @@ export default function Page() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 bg-[#0C1825] shadow-md rounded mt-2">
+    <div className="max-w-4xl md:mx-auto px-4 mx-2 py-8 bg-[#0C1825] shadow-md rounded mt-2">
       <h1 className="text-2xl font-bold mb-6 text-white">Add Product</h1>
 
       <form
@@ -86,7 +86,7 @@ export default function Page() {
         />
         <button
           type="submit"
-          className="bg-[#C69950] text-[#0C1825] rounded px-4 py-2 hover:bg-[#c6c450] md:col-span-2"
+          className="bg-[#C69950] text-white font-bold rounded px-4 py-2 hover:bg-[#c6c450] md:col-span-2"
         >
           Add Product
         </button>
