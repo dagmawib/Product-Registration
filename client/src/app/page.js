@@ -10,6 +10,7 @@ export default function Page() {
     quantity: "",
     sellPrice: "",
     date: "",
+    category: "",
   });
 
   const handleChange = (e) => {
@@ -23,7 +24,8 @@ export default function Page() {
       !form.purchasePrice ||
       !form.quantity ||
       !form.sellPrice ||
-      !form.date
+      !form.date ||
+      !form.category
     )
       return;
 
@@ -34,6 +36,7 @@ export default function Page() {
       quantity: "",
       sellPrice: "",
       date: "",
+      category: "",
     });
   };
 
@@ -77,12 +80,37 @@ export default function Page() {
           placeholder="Sell Price"
           className="border rounded px-4 py-2"
         />
+        {/* Category Dropdown moved next to Sell Price */}
+        <select
+          name="category"
+          value={form.category}
+          onChange={handleChange}
+          className="border rounded px-4 py-2"
+        >
+          <option value="">Select Category</option>
+          <option value="Electronics" className="text-black">
+            Electronics
+          </option>
+          <option value="Clothing" className="text-black">
+            Clothing
+          </option>
+          <option value="Food" className="text-black">
+            Food
+          </option>
+          <option value="Books" className="text-black">
+            Books
+          </option>
+          <option value="Other" className="text-black">
+            Other
+          </option>
+        </select>
         <input
           type="date"
           name="date"
           value={form.date}
           onChange={handleChange}
-          className="border rounded px-4 py-2 md:col-span-2"
+          placeholder="Date"
+          className="border rounded px-4 py-2"
         />
         <button
           type="submit"
@@ -92,7 +120,7 @@ export default function Page() {
         </button>
       </form>
       <h2 className="text-xl font-bold mb-4 text-white">Product List</h2>
-      <ProductTable products={products} />
+      <ProductTable products={products} setProducts={setProducts} />
     </div>
   );
 }
