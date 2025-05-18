@@ -20,6 +20,14 @@ export default function Navbar() {
             Users
           </Link>
         </li>
+        <li>
+          <Link
+            href="/sold"
+            className="text-[#0C1825] hover:text-[#C69950] font-semibold"
+          >
+            Sold
+          </Link>
+        </li>
       </ul>
     </nav>
   );
