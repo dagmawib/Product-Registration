@@ -57,7 +57,7 @@ export default function ProductTable({ products, setProducts }) {
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
+              <option key={cat} value={cat} className="text-[#0C1825]">
                 {cat}
               </option>
             ))}
@@ -93,9 +93,9 @@ export default function ProductTable({ products, setProducts }) {
                     onClick={() => openModal(p)}
                   >
                     <td className="px-4 py-2 border">{p.name}</td>
-                    <td className="px-4 py-2 border">{p.purchasePrice}</td>
+                    <td className="px-4 py-2 border">{p.purchase_price}</td>
                     <td className="px-4 py-2 border">{p.quantity}</td>
-                    <td className="px-4 py-2 border">{p.sellPrice}</td>
+                    <td className="px-4 py-2 border">{p.sell_price}</td>
                     <td className="px-4 py-2 border">{p.date}</td>
                     <td className="px-4 py-2 border">{p.category}</td>
                   </tr>

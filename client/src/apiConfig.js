@@ -1,8 +1,8 @@
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "http://localhost:8000";
 
 // API endpoints
 const API_ENDPOINTS = {
-    ADD_PRODUCT: "",
+    ADD_PRODUCT: "/products",
     ADD_SOLD_PRODUCT: "/sold",
     GET_PRODUCTS: "/products",
     GET_SOLD_PRODUCTS: "/sold",

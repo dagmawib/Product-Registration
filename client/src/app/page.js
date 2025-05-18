@@ -1,43 +1,71 @@
 "use client";
 import { useState } from "react";
+import useSWR from "swr";
 import ProductTable from "../components/table";
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
 export default function Page() {
-  const [products, setProducts] = useState([]);
   const [form, setForm] = useState({
     name: "",
-    purchasePrice: "",
+    purchase_price: "",
     quantity: "",
-    sellPrice: "",
+    sell_price: "",
     date: "",
     category: "",
   });
+
+  const { data: products = [], mutate } = useSWR("/api/get_products", fetcher);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  // Function to send product data to the API
+  const sendProductToApi = async (productData) => {
+    try {
+      const response = await fetch("/api/add_product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add product");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (
       !form.name ||
-      !form.purchasePrice ||
+      !form.purchase_price ||
       !form.quantity ||
-      !form.sellPrice ||
+      !form.sell_price ||
       !form.date ||
       !form.category
     )
       return;
 
-    setProducts((prev) => [...prev, form]);
-    setForm({
-      name: "",
-      purchasePrice: "",
-      quantity: "",
-      sellPrice: "",
-      date: "",
-      category: "",
-    });
+    // Send to API
+    const result = await sendProductToApi(form);
+    if (result) {
+      mutate(); // revalidate products list
+      setForm({
+        name: "",
+        purchase_price: "",
+        quantity: "",
+        sell_price: "",
+        date: "",
+        category: "",
+      });
+    }
   };
 
   return (
@@ -58,8 +86,8 @@ export default function Page() {
         />
         <input
           type="number"
-          name="purchasePrice"
-          value={form.purchasePrice}
+          name="purchase_price"
+          value={form.purchase_price}
           onChange={handleChange}
           placeholder="Purchase Price"
           className="border rounded px-4 py-2"
@@ -74,8 +102,8 @@ export default function Page() {
         />
         <input
           type="number"
-          name="sellPrice"
-          value={form.sellPrice}
+          name="sell_price"
+          value={form.sell_price}
           onChange={handleChange}
           placeholder="Sell Price"
           className="border rounded px-4 py-2"
@@ -120,7 +148,7 @@ export default function Page() {
         </button>
       </form>
       <h2 className="text-xl font-bold mb-4 text-white">Product List</h2>
-      <ProductTable products={products} setProducts={setProducts} />
+      <ProductTable products={products} />
     </div>
   );
 }
