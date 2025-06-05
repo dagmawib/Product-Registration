@@ -1,5 +1,25 @@
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
+
+class Store(Base):
+    __tablename__ = "stores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    users = relationship("User", back_populates="store")
+    products = relationship("Product", back_populates="store")
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, nullable=False)  # 'admin' or 'employee'
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
+    store = relationship("Store", back_populates="users")
+    sales = relationship("Sale", back_populates="user")
 
 class Product(Base):
     __tablename__ = "products"
@@ -13,3 +33,17 @@ class Product(Base):
     max_sell_price = Column(Float, nullable=False)
     date = Column(Date, nullable=False)
     net_profit = Column(Float, nullable=False)
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
+    store = relationship("Store", back_populates="products")
+    sales = relationship("Sale", back_populates="product")
+
+class Sale(Base):
+    __tablename__ = "sales"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    timestamp = Column(Date, nullable=False)
+    product = relationship("Product", back_populates="sales")
+    user = relationship("User", back_populates="sales")
