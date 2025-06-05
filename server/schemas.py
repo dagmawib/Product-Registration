@@ -7,11 +7,13 @@ class ProductCreate(BaseModel):
     purchase_price: confloat(gt=0)
     quantity: conint(ge=0)
     sell_price: confloat(gt=0)
+    max_sell_price: confloat(gt=0)
     date: date
 
 class ProductOut(ProductCreate):
     id: int
     net_profit: float
+    min_sell_price: float
 
     class Config:
         orm_mode = True

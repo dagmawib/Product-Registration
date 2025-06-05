@@ -10,5 +10,6 @@ class Product(Base):
     purchase_price = Column(Float, nullable=False)
     quantity = Column(Integer, nullable=False)
     sell_price = Column(Float, nullable=False)
+    max_sell_price = Column(Float, nullable=False)
     date = Column(Date, nullable=False)
     net_profit = Column(Float, nullable=False)
