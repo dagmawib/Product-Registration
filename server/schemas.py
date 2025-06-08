@@ -1,28 +1,46 @@
-from pydantic import BaseModel, Field, conint, confloat
+from pydantic import BaseModel, Field, conint, confloat, EmailStr
 from datetime import date
 from typing import Optional
 
 class StoreCreate(BaseModel):
-    name: str
-    # For admin registration
-    admin_username: str
-    admin_password: str
+    storename: str
+    email: EmailStr
+    password: str
+    phone_number: Optional[str] = None
 
-class StoreOut(StoreCreate):
+class StoreOut(BaseModel):
     id: int
+    storename: str
+    email: EmailStr
+    phone_number: Optional[str]
     class Config:
         from_attributes = True
 
-class UserCreate(BaseModel):
-    username: str
-    password: str
-    role: str  # 'admin' or 'employee'
-    store_id: Optional[int] = None  # Only required for employee creation
-    store_name: Optional[str] = None  # Only for admin registration
-
-class UserOut(BaseModel):
+class AdminOut(BaseModel):
     id: int
-    username: str
+    email: EmailStr
+    phone_number: Optional[str]
+    storename: str
+    role: str
+    store_id: int
+    class Config:
+        from_attributes = True
+
+class AdminLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class EmployeeCreate(BaseModel):
+    first_name: str
+    last_name: str
+    password: str
+    phone_number: Optional[str] = None
+
+class EmployeeOut(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    phone_number: Optional[str]
     role: str
     store_id: int
     class Config:

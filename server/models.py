@@ -6,7 +6,7 @@ class Store(Base):
     __tablename__ = "stores"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
+    name = Column(String, unique=True, nullable=False)  # storename
     users = relationship("User", back_populates="store")
     products = relationship("Product", back_populates="store")
 
@@ -14,7 +14,11 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=True)  # Admins: required, Employees: optional
+    phone_number = Column(String, nullable=True)
+    first_name = Column(String, nullable=True)  # For employees
+    last_name = Column(String, nullable=True)   # For employees
+    name = Column(String, nullable=True)        # For employees (optional, for display)
     password_hash = Column(String, nullable=False)
     role = Column(String, nullable=False)  # 'admin' or 'employee'
     store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
