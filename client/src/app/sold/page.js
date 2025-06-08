@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 import SoldTable from "../../components/sold/table";
 
 export default function SoldPage() {
@@ -21,8 +22,7 @@ export default function SoldPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can handle the form submission logic here
-    alert(
+    toast.success(
       `Product: ${form.name}\nQuantity: ${form.quantity}\nPrice: ${form.price}`
     );
     setForm({ name: "", quantity: "", price: "" });
@@ -30,6 +30,7 @@ export default function SoldPage() {
 
   return (
     <div className="max-w-4xl mx-auto mt-2 p-6 bg-[#0C1825] rounded shadow text-white">
+      <Toaster position="top-right" />
       <h1 className="text-2xl font-bold mb-6 text-white">Sold Products</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input

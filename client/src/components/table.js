@@ -42,7 +42,7 @@ export default function ProductTable({ products, setProducts }) {
     <>
       <div>
         {/* Search and Category Filter */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2">
+        <div className="flex flex-col md:flex-row  mb-4 gap-4">
           <input
             type="text"
             placeholder="Search by name or category..."
@@ -62,6 +62,16 @@ export default function ProductTable({ products, setProducts }) {
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => {
+              setSearch("");
+              setCategoryFilter("");
+            }}
+            className="rounded px-4 py-1 border  text-white font-semibold hover:bg-[#C69950] w-full md:w-auto"
+          >
+            Clear
+          </button>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-[#0C1825] border border-gray-200 rounded shadow">

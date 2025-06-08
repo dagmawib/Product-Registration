@@ -2,6 +2,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import ProductTable from "../components/table";
+import { toast, Toaster } from "react-hot-toast";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -50,8 +51,10 @@ export default function Page() {
       !form.sell_price ||
       !form.date ||
       !form.category
-    )
+    ) {
+      toast.error("Please fill in all fields.");
       return;
+    }
 
     // Send to API
     const result = await sendProductToApi(form);
@@ -65,11 +68,15 @@ export default function Page() {
         date: "",
         category: "",
       });
+      toast.success("Product added successfully!");
+    } else {
+      toast.error("Failed to add product. Please try again.");
     }
   };
 
   return (
     <div className="max-w-4xl md:mx-auto px-4 mx-2 py-8 bg-[#0C1825] shadow-md rounded mt-2">
+      <Toaster position="top-right" />
       <h1 className="text-2xl font-bold mb-6 text-white">Add Product</h1>
 
       <form
