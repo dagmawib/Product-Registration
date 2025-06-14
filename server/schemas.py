@@ -56,6 +56,16 @@ class ProductCreate(BaseModel):
     date: date
     store_id: int
 
+class ProductUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    category: Optional[str] = Field(None, min_length=1, max_length=50)
+    purchase_price: Optional[float] = Field(None, gt=0)
+    quantity: Optional[int] = Field(None, ge=0)
+    sell_price: Optional[float] = Field(None, gt=0)
+    max_sell_price: Optional[float] = Field(None, gt=0)
+    date: Optional[date] = None
+    # store_id is typically not updated this way. If it needs to change, it's often a more complex operation.
+
 class ProductOut(ProductCreate):
     id: int
     net_profit: float

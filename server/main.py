@@ -264,6 +264,63 @@ def get_products(db: Session = Depends(get_db)):
     logger.info(f"Fetched {len(result)} products.")
     return result
 
+@app.put("/products/{product_id}", response_model=schemas.ProductOut)
+def update_product_put(product_id: int, product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(admin_required)):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id, models.Product.store_id == current_user.store_id).first()
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found or not in your store")
+
+    # Update all fields from the product schema
+    for var, value in vars(product).items():
+        setattr(db_product, var, value) if value is not None else None # Ensure store_id from product matches current_user.store_id
+    
+    if product.store_id != current_user.store_id:
+        raise HTTPException(status_code=403, detail="Cannot change product's store_id to a different store.")
+
+    db_product.net_profit = (db_product.sell_price - db_product.purchase_price) * db_product.quantity
+    db.commit()
+    db.refresh(db_product)
+    min_sell_price = db_product.purchase_price * 1.2
+    return schemas.ProductOut(
+        **schemas.ProductCreate.from_orm(db_product).dict(), 
+        id=db_product.id, 
+        net_profit=db_product.net_profit, 
+        min_sell_price=min_sell_price
+    )
+
+@app.patch("/products/{product_id}", response_model=schemas.ProductOut)
+def update_product_patch(product_id: int, product: schemas.ProductUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(admin_required)):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id, models.Product.store_id == current_user.store_id).first()
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found or not in your store")
+
+    update_data = product.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_product, key, value)
+    
+    # Recalculate net_profit if relevant fields changed
+    if any(key in update_data for key in ["sell_price", "purchase_price", "quantity"]):
+        db_product.net_profit = (db_product.sell_price - db_product.purchase_price) * db_product.quantity
+
+    db.commit()
+    db.refresh(db_product)
+    min_sell_price = db_product.purchase_price * 1.2
+    return schemas.ProductOut(
+        **schemas.ProductCreate.from_orm(db_product).dict(), 
+        id=db_product.id, 
+        net_profit=db_product.net_profit, 
+        min_sell_price=min_sell_price
+    )
+
+@app.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(product_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(admin_required)):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id, models.Product.store_id == current_user.store_id).first()
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found or not in your store")
+    db.delete(db_product)
+    db.commit()
+    return None
+
 @app.post("/auth/register_admin", response_model=schemas.AdminOut)
 def register_admin(store: schemas.StoreCreate, db: Session = Depends(get_db)):
     # Check if store name already exists
