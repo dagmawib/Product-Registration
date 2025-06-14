@@ -15,22 +15,37 @@ export const POST = async (req) => {
     // }
 
     const body = await req.json();
+<<<<<<< HEAD
     const { name, max_sell_price, purchase_price, quantity, category, date } = body;
 
    
     const parsedQuantity = parseInt(quantity, 10);
     const parsedSellPrice = parseInt(max_sell_price, 10);
+=======
+    const { name, sell_price, purchase_price, quantity, category, date } = body;
+
+   
+    const parsedQuantity = parseInt(quantity, 10);
+    const parsedSellPrice = parseInt(sell_price, 10);
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     const parsedPurchasePrice = parseInt(purchase_price, 10);
 
     
     const requestBody = {
       name,
+<<<<<<< HEAD
       max_sell_price: parsedSellPrice,
+=======
+      sell_price: parsedSellPrice,
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
       purchase_price: parsedPurchasePrice,
       quantity: parsedQuantity,
       category,
       date,
+<<<<<<< HEAD
       store_id: 1, 
+=======
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     };
 
     console.log("Request Body:", requestBody);

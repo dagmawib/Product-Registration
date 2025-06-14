@@ -2,8 +2,11 @@ const API_BASE_URL = "http://localhost:8000";
 
 // API endpoints
 const API_ENDPOINTS = {
+<<<<<<< HEAD
     LOGIN: "/auth/login_admin",
 
+=======
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     ADD_PRODUCT: "/products",
     ADD_SOLD_PRODUCT: "/sold",
     GET_PRODUCTS: "/products",
