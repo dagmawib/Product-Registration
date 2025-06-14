@@ -15,11 +15,11 @@ export const POST = async (req) => {
     // }
 
     const body = await req.json();
-    const { name, sell_price, purchase_price, quantity, category, date } = body;
+    const { name, max_sell_price, purchase_price, quantity, category, date } = body;
 
    
     const parsedQuantity = parseInt(quantity, 10);
-    const parsedSellPrice = parseInt(sell_price, 10);
+    const parsedSellPrice = parseInt(max_sell_price, 10);
     const parsedPurchasePrice = parseInt(purchase_price, 10);
 
     
@@ -30,6 +30,7 @@ export const POST = async (req) => {
       quantity: parsedQuantity,
       category,
       date,
+      store_id: 1, 
     };
 
     console.log("Request Body:", requestBody);

@@ -1,18 +1,10 @@
-import { cookies } from "next/headers";
+
 import { API_BASE_URL, API_ENDPOINTS } from "@/apiConfig";
 import axios from "axios";
 
 export async function PATCH(req) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("access_token")?.value;
-
-    if (!token) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized: Missing credentials" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
-    }
+   
 
     const body = await req.json();
     const { id, ...updateFields } = body;
@@ -25,8 +17,8 @@ export async function PATCH(req) {
     }
 
     const validFields = [
-      "product_name",
-      "sell_price",
+      "name",
+      "max_sell_price",
       "purchase_price",
       "quantity",
       "category",
@@ -42,11 +34,11 @@ export async function PATCH(req) {
     }
 
     const response = await axios.patch(
-      `${API_BASE_URL}${API_ENDPOINTS.EDIT_VEHICLE}/${id}/`,
+      `${API_BASE_URL}${API_ENDPOINTS.UPDATE_PRODUCT}/${id}/`,
       payload,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+
           "Content-Type": "application/json",
           Accept: "application/json",
         },
