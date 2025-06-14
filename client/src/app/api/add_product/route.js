@@ -25,7 +25,7 @@ export const POST = async (req) => {
     
     const requestBody = {
       name,
-      sell_price: parsedSellPrice,
+      max_sell_price: parsedSellPrice,
       purchase_price: parsedPurchasePrice,
       quantity: parsedQuantity,
       category,

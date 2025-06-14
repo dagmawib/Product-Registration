@@ -11,7 +11,7 @@ export default function Page() {
     name: "",
     purchase_price: "",
     quantity: "",
-    sell_price: "",
+    max_sell_price: "",
     date: "",
     category: "",
   });
@@ -48,7 +48,7 @@ export default function Page() {
       !form.name ||
       !form.purchase_price ||
       !form.quantity ||
-      !form.sell_price ||
+      !form.max_sell_price ||
       !form.date ||
       !form.category
     ) {
@@ -64,7 +64,7 @@ export default function Page() {
         name: "",
         purchase_price: "",
         quantity: "",
-        sell_price: "",
+        max_sell_price: "",
         date: "",
         category: "",
       });
@@ -109,10 +109,10 @@ export default function Page() {
         />
         <input
           type="number"
-          name="sell_price"
-          value={form.sell_price}
+          name="max_sell_price"
+          value={form.max_sell_price}
           onChange={handleChange}
-          placeholder="Sell Price"
+          placeholder="Max Sell Price"
           className="border rounded px-4 py-2"
         />
         {/* Category Dropdown moved next to Sell Price */}
