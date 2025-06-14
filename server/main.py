@@ -214,7 +214,8 @@ def admin_dashboard_metrics(db: Session = Depends(get_db), current_user: models.
 
 # Restrict product endpoints to admin only for create, update, delete
 @app.post("/products", response_model=schemas.ProductOut, status_code=201)
-def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(admin_required)):
+# def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db), current_user: models.User = Depends(admin_required)):
+def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)):    
     try:
         db_product = models.Product(**product.dict(), net_profit=0)
         db.add(db_product)
@@ -235,9 +236,14 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)
         raise HTTPException(status_code=500, detail="Failed to create product.")
 
 @app.get("/products", response_model=list[schemas.ProductOut])
-def get_products(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+# def get_products(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def get_products(db: Session = Depends(get_db)):
     # Only return products for the user's store
-    products = db.query(models.Product).filter(models.Product.store_id == current_user.store_id).all()
+    # products = db.query(models.Product).filter(models.Product.store_id == current_user.store_id).all()
+    products = db.query(models.Product).all()  # For testing, we are not filtering by store_id
+    if not products:
+        logger.info("No products found.")
+        return []
     result = []
     for p in products:
         p.net_profit = (p.sell_price - p.purchase_price) * p.quantity
@@ -251,6 +257,7 @@ def get_products(db: Session = Depends(get_db), current_user: models.User = Depe
             sell_price=p.sell_price,
             max_sell_price=p.max_sell_price,
             date=p.date,
+            store_id=p.store_id,  # Added store_id
             net_profit=p.net_profit,
             min_sell_price=min_sell_price
         ))
