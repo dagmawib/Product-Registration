@@ -1,51 +1,36 @@
 import axios from "axios";
-// import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 import { API_BASE_URL, API_ENDPOINTS } from "@/apiConfig";
 
 export const POST = async (req) => {
   try {
-    // const cookieStore = await cookies();
-    // const token = cookieStore.get("access_token")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
 
-    // if (!token) {
-    //   return new Response(
-    //     JSON.stringify({ error: "Unauthorized: Missing credentials" }),
-    //     { status: 401, headers: { "Content-Type": "application/json" } }
-    //   );
-    // }
+    if (!token) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: Missing credentials" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const body = await req.json();
-<<<<<<< HEAD
     const { name, max_sell_price, purchase_price, quantity, category, date } = body;
 
    
     const parsedQuantity = parseInt(quantity, 10);
     const parsedSellPrice = parseInt(max_sell_price, 10);
-=======
-    const { name, sell_price, purchase_price, quantity, category, date } = body;
-
-   
-    const parsedQuantity = parseInt(quantity, 10);
-    const parsedSellPrice = parseInt(sell_price, 10);
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     const parsedPurchasePrice = parseInt(purchase_price, 10);
 
     
     const requestBody = {
       name,
-<<<<<<< HEAD
       max_sell_price: parsedSellPrice,
-=======
-      sell_price: parsedSellPrice,
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
       purchase_price: parsedPurchasePrice,
-      quantity: parsedQuantity,
+      quantity_available: parsedQuantity,
       category,
       date,
-<<<<<<< HEAD
       store_id: 1, 
-=======
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     };
 
     console.log("Request Body:", requestBody);
@@ -57,7 +42,7 @@ export const POST = async (req) => {
       requestBody,
       {
         headers: {
-          // Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
         },

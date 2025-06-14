@@ -1,5 +1,4 @@
 "use client";
-<<<<<<< HEAD
 
 import { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
@@ -40,22 +39,10 @@ export default function UpdateProductModal({ open, onClose, product }) {
   } = useSWRMutation("/api/update_product", updateProduct);
 
   if (!open) return null;
-=======
-import { useEffect, useState } from "react";
-
-export default function UpdateProductModal({ open, onClose, product, onSave }) {
-  const [form, setForm] = useState(product ?? {});
-
-  
-  useEffect(() => setForm(product ?? {}), [product]);
-
-  if (!open) return null; 
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -78,12 +65,6 @@ export default function UpdateProductModal({ open, onClose, product, onSave }) {
       console.error("Update failed:", err.message);
       alert("Update failed: " + err.message);
     }
-=======
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(form);           
-    onClose();              
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
   };
 
   return (
@@ -94,15 +75,9 @@ export default function UpdateProductModal({ open, onClose, product, onSave }) {
         <form onSubmit={handleSubmit} className="space-y-3">
           {[
             ["name", "Product Name"],
-<<<<<<< HEAD
             ["purchase_price", "Purchase Price"],
             ["quantity", "Quantity"],
             ["max_sell_price", "Sell Price"],
-=======
-            ["purchasePrice", "Purchase Price"],
-            ["quantity", "Quantity"],
-            ["sellPrice", "Sell Price"],
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
             ["date", "Date"],
             ["category", "Category"],
           ].map(([key, label]) => (
@@ -129,16 +104,10 @@ export default function UpdateProductModal({ open, onClose, product, onSave }) {
             </button>
             <button
               type="submit"
-<<<<<<< HEAD
               disabled={isUpdating}
               className="px-4 py-2 rounded bg-[#C99346] text-[#0F172A] hover:opacity-90"
             >
               {isUpdating ? "Saving..." : "Save"}
-=======
-              className="px-4 py-2 rounded bg-[#C99346] text-[#0F172A] hover:opacity-90"
-            >
-              Save
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
             </button>
           </div>
         </form>

@@ -10,10 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.9.0",
-<<<<<<< HEAD
     "cookies-next": "^6.0.0",
-=======
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
