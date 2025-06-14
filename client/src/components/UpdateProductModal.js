@@ -1,21 +1,70 @@
 "use client";
-import { useEffect, useState } from "react";
 
-export default function UpdateProductModal({ open, onClose, product, onSave }) {
+import { useEffect, useState } from "react";
+import useSWRMutation from "swr/mutation";
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+export default function UpdateProductModal({ open, onClose, product }) {
   const [form, setForm] = useState(product ?? {});
 
-  
-  useEffect(() => setForm(product ?? {}), [product]);
+  useEffect(() => {
+    setForm(product ?? {});
+  }, [product]);
 
-  if (!open) return null; 
+  const { mutate } = useSWR("/api/get_products", fetcher); // Reuse your existing SWR
+
+  const updateProduct = async (url, { arg }) => {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(arg),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to update product");
+    }
+
+    return res.json();
+  };
+
+  const {
+    trigger,
+    isMutating: isUpdating,
+    error,
+  } = useSWRMutation("/api/update_product", updateProduct);
+
+  if (!open) return null;
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(form);           
-    onClose();              
+
+    try {
+      const payload = {
+        id: product.id,
+        name: form.name,
+        purchase_price: form.purchase_price,
+        max_sell_price: form.max_sell_price,
+        quantity: form.quantity,
+        category: form.category,
+        date: form.date,
+      };
+
+      await trigger(payload);
+      mutate();
+
+      onClose();
+    } catch (err) {
+      console.error("Update failed:", err.message);
+      alert("Update failed: " + err.message);
+    }
   };
 
   return (
@@ -26,9 +75,9 @@ export default function UpdateProductModal({ open, onClose, product, onSave }) {
         <form onSubmit={handleSubmit} className="space-y-3">
           {[
             ["name", "Product Name"],
-            ["purchasePrice", "Purchase Price"],
+            ["purchase_price", "Purchase Price"],
             ["quantity", "Quantity"],
-            ["sellPrice", "Sell Price"],
+            ["max_sell_price", "Sell Price"],
             ["date", "Date"],
             ["category", "Category"],
           ].map(([key, label]) => (
@@ -55,9 +104,10 @@ export default function UpdateProductModal({ open, onClose, product, onSave }) {
             </button>
             <button
               type="submit"
+              disabled={isUpdating}
               className="px-4 py-2 rounded bg-[#C99346] text-[#0F172A] hover:opacity-90"
             >
-              Save
+              {isUpdating ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

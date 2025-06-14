@@ -105,7 +105,7 @@ export default function ProductTable({ products, setProducts }) {
                     <td className="px-4 py-2 border">{p.name}</td>
                     <td className="px-4 py-2 border">{p.purchase_price}</td>
                     <td className="px-4 py-2 border">{p.quantity}</td>
-                    <td className="px-4 py-2 border">{p.sell_price}</td>
+                    <td className="px-4 py-2 border">{p.min_sell_price} - {p.max_sell_price}</td>
                     <td className="px-4 py-2 border">{p.date}</td>
                     <td className="px-4 py-2 border">{p.category}</td>
                   </tr>
