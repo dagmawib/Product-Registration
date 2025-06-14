@@ -54,7 +54,7 @@ class ProductCreate(BaseModel):
     category: str = Field(..., min_length=1, max_length=50)
     purchase_price: float = Field(..., gt=0)
     quantity: int = Field(..., ge=0)
-    sell_price: float = Field(..., gt=0)
+    # sell_price: float = Field(..., gt=0)
     max_sell_price: float = Field(..., gt=0)
     date: datetime_date
     store_id: int
@@ -67,7 +67,7 @@ class ProductUpdate(BaseModel):
     category: Optional[str] = Field(default=None, min_length=1, max_length=50)
     purchase_price: Optional[float] = Field(default=None, gt=0)
     quantity: Optional[int] = Field(default=None, ge=0)
-    sell_price: Optional[float] = Field(default=None, gt=0)
+    # sell_price: Optional[float] = Field(default=None, gt=0)
     max_sell_price: Optional[float] = Field(default=None, gt=0)
     date: Optional[datetime_date] = None # Simplified: if no other Field params, default=None is implicit for Optional
 

@@ -203,7 +203,7 @@ def get_products(store_id: Optional[int] = None, db: Session = Depends(get_db)):
         return []
     result = []
     for p in products:
-        p.net_profit = (p.sell_price - p.purchase_price) * p.quantity
+        p.net_profit = (p.max_sell_price - p.purchase_price) * p.quantity
         min_sell_price = p.purchase_price * 1.2
         result.append(schemas.ProductOut(
             id=p.id,
@@ -211,7 +211,7 @@ def get_products(store_id: Optional[int] = None, db: Session = Depends(get_db)):
             category=p.category,
             purchase_price=p.purchase_price,
             quantity=p.quantity,
-            sell_price=p.sell_price,
+            # sell_price=p.sell_price,
             max_sell_price=p.max_sell_price,
             date=p.date,
             store_id=p.store_id,  # Added store_id
@@ -243,7 +243,7 @@ def update_product_put(product_id: int, product_update: schemas.ProductCreate, d
     
     # db_product.store_id = target_store_id # Already set by loop if store_id is in ProductCreate
 
-    db_product.net_profit = (db_product.sell_price - db_product.purchase_price) * db_product.quantity
+    db_product.net_profit = (db_product.max_sell_price - db_product.purchase_price) * db_product.quantity
     db.commit()
     db.refresh(db_product)
     
@@ -253,7 +253,7 @@ def update_product_put(product_id: int, product_update: schemas.ProductCreate, d
         "category": db_product.category,
         "purchase_price": db_product.purchase_price,
         "quantity": db_product.quantity,
-        "sell_price": db_product.sell_price,
+        # "sell_price": db_product.sell_price,
         "max_sell_price": db_product.max_sell_price,
         "date": db_product.date,
         "store_id": db_product.store_id,
@@ -282,8 +282,8 @@ def update_product_patch(product_id: int, product_update: schemas.ProductUpdate,
         setattr(db_product, key, value)
     
     # Recalculate net_profit if relevant fields changed
-    if any(key in update_data for key in ["sell_price", "purchase_price", "quantity"]):
-        db_product.net_profit = (db_product.sell_price - db_product.purchase_price) * db_product.quantity
+    if any(key in update_data for key in ["purchase_price", "quantity"]):
+        db_product.net_profit = (db_product.max_sell_price - db_product.purchase_price) * db_product.quantity
 
     db.commit()
     db.refresh(db_product)
@@ -294,7 +294,7 @@ def update_product_patch(product_id: int, product_update: schemas.ProductUpdate,
         "category": db_product.category,
         "purchase_price": db_product.purchase_price,
         "quantity": db_product.quantity,
-        "sell_price": db_product.sell_price,
+        # "sell_price": db_product.sell_price,
         "max_sell_price": db_product.max_sell_price,
         "date": db_product.date,
         "store_id": db_product.store_id,

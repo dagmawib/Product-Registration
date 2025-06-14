@@ -33,7 +33,7 @@ class Product(Base):
     category = Column(String, nullable=False)
     purchase_price = Column(Float, nullable=False)
     quantity = Column(Integer, nullable=False)
-    sell_price = Column(Float, nullable=False)
+    # sell_price = Column(Float, nullable=False)
     max_sell_price = Column(Float, nullable=False)
     date = Column(Date, nullable=False)
     net_profit = Column(Float, nullable=False)
