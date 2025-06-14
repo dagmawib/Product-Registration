@@ -58,10 +58,7 @@ async def register_admin_and_store(
 ):
     logger.info(f"Admin registration attempt for email: {admin_data.email} and store: {admin_data.store_name}")
 
-    # Removed the global check for an existing admin. 
-    # Now, multiple stores can be registered, each with its own admin.
-
-    existing_store_by_name = db.query(models.Store).filter(models.Store.storename == admin_data.store_name).first()
+    existing_store_by_name = db.query(models.Store).filter(models.Store.name == admin_data.store_name).first() # Changed storename to name
     if existing_store_by_name:
         logger.warning(f"Admin registration failed. Store name already exists: {admin_data.store_name}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Store name already registered.")
@@ -72,16 +69,13 @@ async def register_admin_and_store(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered.")
 
     # Create the store first
-    # Ensure your models.Store can be created with storename and potentially other fields from AdminStoreRegister
     new_store = models.Store(
-        storename=admin_data.store_name,
-        # Add other store-related fields from admin_data if they exist in AdminStoreRegister and models.Store
-        # e.g., email=admin_data.store_email (if store has its own email distinct from admin)
+        name=admin_data.store_name, # Changed storename to name
     )
     db.add(new_store)
     db.commit()
     db.refresh(new_store)
-    logger.info(f"Store created successfully: {new_store.storename} with ID: {new_store.id}")
+    logger.info(f"Store created successfully: {new_store.name} with ID: {new_store.id}") # Changed storename to name
 
     # Now create the admin user
     hashed_password = security.get_password_hash(admin_data.password)
@@ -90,8 +84,8 @@ async def register_admin_and_store(
         "email": admin_data.email,
         "hashed_password": hashed_password,
         "role": "admin",
-        "store_id": new_store.id, # Link admin to the new store
-        "store_name": new_store.storename, # Store name can be part of User model for convenience
+        "store_id": new_store.id,
+        "store_name": new_store.name, # Changed storename to name, store_name on User model still refers to the store's name
         "first_name": admin_data.first_name,
         "last_name": admin_data.last_name,
         "phone_number": admin_data.phone_number

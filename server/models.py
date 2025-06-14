@@ -1,12 +1,12 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import relationship
-from .database import Base
+from .database import Base # Changed back to relative import
 
 class Store(Base):
     __tablename__ = "stores"
 
     id = Column(Integer, primary_key=True, index=True)
-    storename = Column(String, unique=True, nullable=False) # Changed from name to storename
+    name = Column(String, unique=True, nullable=False) # Reverted from storename back to name
     users = relationship("User", back_populates="store")
     products = relationship("Product", back_populates="store")
 
@@ -18,8 +18,7 @@ class User(Base):
     phone_number = Column(String, nullable=True)
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
-    # name = Column(String, nullable=True)  # Display name for employees - consider if this is store_name or user's full name
-    store_name = Column(String, nullable=True) # Added to store the store's name directly on the user for convenience
+    store_name = Column(String, nullable=True) # This can still be useful on User model for convenience
     hashed_password = Column(String, nullable=False) # Changed from password_hash
     role = Column(String, nullable=False)  # User role: 'admin' or 'employee'
     store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
