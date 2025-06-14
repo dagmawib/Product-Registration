@@ -6,7 +6,7 @@ class Store(Base):
     __tablename__ = "stores"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
+    storename = Column(String, unique=True, nullable=False) # Changed from name to storename
     users = relationship("User", back_populates="store")
     products = relationship("Product", back_populates="store")
 
@@ -18,8 +18,9 @@ class User(Base):
     phone_number = Column(String, nullable=True)
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
-    name = Column(String, nullable=True)  # Display name for employees
-    password_hash = Column(String, nullable=False)
+    # name = Column(String, nullable=True)  # Display name for employees - consider if this is store_name or user's full name
+    store_name = Column(String, nullable=True) # Added to store the store's name directly on the user for convenience
+    hashed_password = Column(String, nullable=False) # Changed from password_hash
     role = Column(String, nullable=False)  # User role: 'admin' or 'employee'
     store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
     store = relationship("Store", back_populates="users")

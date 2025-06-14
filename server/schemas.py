@@ -53,45 +53,112 @@ class EmployeeOut(BaseModel):
     class Config:
         from_attributes = True
 
-class ProductCreate(BaseModel):
+# Schema for JWT Token response
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    sub: Optional[str] = None # Subject (e.g., username or email)
+    role: Optional[str] = None
+    id: Optional[int] = None # User ID
+
+# Schema for initial Admin and Store Registration
+class AdminStoreRegister(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8)
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
+    phone_number: Optional[str] = None
+    store_name: str = Field(..., min_length=1)
+    # You can add more fields here if needed for store or admin during initial setup
+    # e.g., store_address: Optional[str] = None
+
+# User Schemas (generic for User model)
+class UserBase(BaseModel):
+    email: EmailStr
+    store_name: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    role: str = Field(default="employee") # Default role
+
+class UserCreate(UserBase):
+    password: str
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    store_name: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    # Role and password updates should be handled by specific endpoints/logic
+
+class UserResponse(UserBase):
+    id: int
+    is_active: bool = True # Assuming you might add an is_active field to your model
+
+    class Config:
+        from_attributes = True
+
+# Product Schemas (redefined for clarity and consistency with User model)
+class ProductBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     category: str = Field(..., min_length=1, max_length=50)
     purchase_price: float = Field(..., gt=0)
-    quantity: int = Field(..., ge=0)
-    max_sell_price: float = Field(..., gt=0)
-    date: datetime_date # Using aliased date
-    store_id: int # This will be set by the endpoint using current_user.store_id
-    class Config:
-        from_attributes = True
+    quantity_available: int = Field(..., ge=0) # Renamed from quantity for clarity
+    # max_sell_price: float = Field(..., gt=0) # Consider if this is still needed or derived
+    # date: datetime_date # Date added, could be auto-set
+
+class ProductCreate(ProductBase):
+    # added_by_user_id will be set by the endpoint
+    pass
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = Field(default=None, min_length=1, max_length=100)
     category: Optional[str] = Field(default=None, min_length=1, max_length=50)
     purchase_price: Optional[float] = Field(default=None, gt=0)
-    quantity: Optional[int] = Field(default=None, ge=0)
-    max_sell_price: Optional[float] = Field(default=None, gt=0)
-    date: Optional[datetime_date] = None # Corrected: Use alias and simple Optional for Pydantic v2
+    quantity_available: Optional[int] = Field(default=None, ge=0)
+    # max_sell_price: Optional[float] = Field(default=None, gt=0)
 
-class ProductOut(ProductCreate):
+class ProductResponse(ProductBase):
     id: int
-    net_profit: float
-    min_sell_price: float
+    added_by_user_id: int
+    date_added: datetime_date # Assuming your model has this
+    # net_profit: Optional[float] = None # This would be a calculated field, maybe not directly in DB model schema
+    # min_sell_price: Optional[float] = None # Also likely calculated
+
     class Config:
         from_attributes = True
 
-class SaleCreate(BaseModel):
+# SoldProduct Schemas (redefined for clarity)
+class SoldProductBase(BaseModel):
     product_id: int
-    # user_id will be current_user.id, not from body
-    # store_id will be current_user.store_id, not from body
-    quantity: int
-    timestamp: datetime_date # Using aliased date
+    quantity_sold: int = Field(..., gt=0)
+    sale_price: float = Field(..., gt=0) # Price per unit at which it was sold
+    date_sold: Optional[datetime_date] = None # Can default to now in the endpoint
 
-class SaleOut(BaseModel): # Explicitly define all fields for SaleOut
+class SoldProductCreate(SoldProductBase):
+    # sold_by_user_id will be set by the endpoint
+    pass
+
+class SoldProductUpdate(BaseModel):
+    quantity_sold: Optional[int] = Field(default=None, gt=0)
+    sale_price: Optional[float] = Field(default=None, gt=0)
+    date_sold: Optional[datetime_date] = None
+
+class SoldProductResponse(SoldProductBase):
     id: int
-    product_id: int
-    user_id: int
-    store_id: int
-    quantity: int
-    timestamp: datetime_date # Using aliased date
+    sold_by_user_id: int
+    date_sold: datetime_date # Ensure this is not optional for response
+
     class Config:
         from_attributes = True
+
+# Dashboard Metrics Schema
+class DashboardMetrics(BaseModel):
+    total_products: int
+    total_sales_volume: float
+    total_units_sold: int
+    total_employees: int
+    # Add other metrics as needed

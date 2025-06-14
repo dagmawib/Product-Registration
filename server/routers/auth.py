@@ -1,6 +1,6 @@
 \
 from fastapi import APIRouter, Depends, HTTPException, status, Body
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm # Added back this import
 from sqlalchemy.orm import Session
 from typing import Any, Optional
 
@@ -15,20 +15,20 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 @router.post("/login_admin", response_model=schemas.Token)
-async def login_admin_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(auth_deps.get_db)):
-    logger.info(f"Admin login attempt for username: {form_data.username}")
-    user = db.query(models.User).filter(models.User.email == form_data.username, models.User.role == "admin").first()
-    if not user or not security.verify_password(form_data.password, user.hashed_password):
-        logger.warning(f"Admin login failed for username: {form_data.username}")
+async def login_admin_for_access_token(admin_credentials: schemas.AdminLogin, db: Session = Depends(auth_deps.get_db)): # Changed from OAuth2PasswordRequestForm
+    logger.info(f"Admin login attempt for email: {admin_credentials.email}") # Changed from form_data.username
+    user = db.query(models.User).filter(models.User.email == admin_credentials.email, models.User.role == "admin").first() # Changed
+    if not user or not security.verify_password(admin_credentials.password, user.hashed_password): # Changed from form_data.password
+        logger.warning(f"Admin login failed for email: {admin_credentials.email}") # Changed
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password", # Changed message slightly for clarity
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = security.create_access_token(
         data={"sub": user.email, "role": user.role, "id": user.id}
     )
-    logger.info(f"Admin login successful for username: {form_data.username}")
+    logger.info(f"Admin login successful for email: {admin_credentials.email}") # Changed
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/login_employee", response_model=schemas.Token)
@@ -50,6 +50,63 @@ async def login_employee_for_access_token(form_data: OAuth2PasswordRequestForm =
     )
     logger.info(f"Employee login successful for username: {form_data.username}")
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/register_admin", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
+async def register_admin_and_store(
+    admin_data: schemas.AdminStoreRegister, # New schema needed for this
+    db: Session = Depends(auth_deps.get_db)
+):
+    logger.info(f"Admin registration attempt for email: {admin_data.email} and store: {admin_data.store_name}")
+
+    # Removed the global check for an existing admin. 
+    # Now, multiple stores can be registered, each with its own admin.
+
+    existing_store_by_name = db.query(models.Store).filter(models.Store.storename == admin_data.store_name).first()
+    if existing_store_by_name:
+        logger.warning(f"Admin registration failed. Store name already exists: {admin_data.store_name}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Store name already registered.")
+    
+    existing_user_by_email = db.query(models.User).filter(models.User.email == admin_data.email).first()
+    if existing_user_by_email:
+        logger.warning(f"Admin registration failed. Email already registered: {admin_data.email}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered.")
+
+    # Create the store first
+    # Ensure your models.Store can be created with storename and potentially other fields from AdminStoreRegister
+    new_store = models.Store(
+        storename=admin_data.store_name,
+        # Add other store-related fields from admin_data if they exist in AdminStoreRegister and models.Store
+        # e.g., email=admin_data.store_email (if store has its own email distinct from admin)
+    )
+    db.add(new_store)
+    db.commit()
+    db.refresh(new_store)
+    logger.info(f"Store created successfully: {new_store.storename} with ID: {new_store.id}")
+
+    # Now create the admin user
+    hashed_password = security.get_password_hash(admin_data.password)
+    
+    admin_user_dict = {
+        "email": admin_data.email,
+        "hashed_password": hashed_password,
+        "role": "admin",
+        "store_id": new_store.id, # Link admin to the new store
+        "store_name": new_store.storename, # Store name can be part of User model for convenience
+        "first_name": admin_data.first_name,
+        "last_name": admin_data.last_name,
+        "phone_number": admin_data.phone_number
+    }
+    
+    # Ensure all fields in admin_user_dict are valid for models.User
+    new_admin = models.User(**admin_user_dict)
+    
+    db.add(new_admin)
+    db.commit()
+    db.refresh(new_admin)
+    logger.info(f"Admin user created successfully: {new_admin.email} for store ID: {new_store.id}")
+    
+    # Return UserResponse schema
+    return new_admin
 
 
 @router.post("/add_employee", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
