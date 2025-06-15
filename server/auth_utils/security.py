@@ -2,7 +2,7 @@
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
-from ..core import config # To access SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from core import config # Changed to absolute import
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

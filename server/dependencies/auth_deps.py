@@ -5,9 +5,10 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 import logging
 
-from .. import database, models
-from ..core import config
-from ..auth_utils import security # For verify_password, get_password_hash, create_access_token
+import database
+import models
+from core import config
+from auth_utils import security # For verify_password, get_password_hash, create_access_token
 
 logger = logging.getLogger(__name__)
 
