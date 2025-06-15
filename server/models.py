@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import relationship
-from .database import Base # Changed back to relative import
+from database import Base # Changed to absolute import
 
 class Store(Base):
     __tablename__ = "stores"
