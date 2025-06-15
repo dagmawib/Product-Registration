@@ -9,23 +9,23 @@ export default function ProductTable({ products, setProducts }) {
   const [editingProduct, setEditingProduct] = useState(null);
 
   // Get unique categories from products
-  // const categories = useMemo(() => {
-  //   const set = new Set(products.map((p) => p.category).filter(Boolean));
-  //   return Array.from(set);
-  // }, [products]);
+  const categories = useMemo(() => {
+    const set = new Set(products.map((p) => p.category).filter(Boolean));
+    return Array.from(set);
+  }, [products]);
 
   // Filtered products
-  // const filteredProducts = useMemo(() => {
-  //   return products.filter((p) => {
-  //     const matchesSearch =
-  //       p.name.toLowerCase().includes(search.toLowerCase()) ||
-  //       p.category?.toLowerCase().includes(search.toLowerCase());
-  //     const matchesCategory = categoryFilter
-  //       ? p.category === categoryFilter
-  //       : true;
-  //     return matchesSearch && matchesCategory;
-  //   });
-  // }, [products, search, categoryFilter]);
+  const filteredProducts = useMemo(() => {
+    return products.filter((p) => {
+      const matchesSearch =
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.category?.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory = categoryFilter
+        ? p.category === categoryFilter
+        : true;
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, search, categoryFilter]);
 
   const openModal = (product) => {
     setEditingProduct(product);
@@ -56,11 +56,11 @@ export default function ProductTable({ products, setProducts }) {
             className="border rounded px-4 py-2 w-full md:w-1/4"
           >
             <option value="">All Categories</option>
-            {/* {categories.map((cat) => (
+            {categories.map((cat) => (
               <option key={cat} value={cat} className="text-[#0C1825]">
                 {cat}
               </option>
-            ))} */}
+            ))}
           </select>
           <button
             type="button"
@@ -86,7 +86,7 @@ export default function ProductTable({ products, setProducts }) {
               </tr>
             </thead>
             <tbody>
-              {/* {filteredProducts.length === 0 ? ( */}
+              {filteredProducts.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -95,9 +95,9 @@ export default function ProductTable({ products, setProducts }) {
                     No products found.
                   </td>
                 </tr>
-              {/* ) : ( */}
-                {/* filteredProducts.map((p, index) => ( */}
-                  {/* <tr
+              ) : (
+                filteredProducts.map((p, index) => (
+                  <tr
                     key={index}
                     className="border-t text-white"
                     onClick={() => openModal(p)}
@@ -105,12 +105,12 @@ export default function ProductTable({ products, setProducts }) {
                     <td className="px-4 py-2 border">{p.name}</td>
                     <td className="px-4 py-2 border">{p.purchase_price}</td>
                     <td className="px-4 py-2 border">{p.quantity}</td>
-                    <td className="px-4 py-2 border">{p.sell_price}</td>
+                    <td className="px-4 py-2 border">{p.min_sell_price} - {p.max_sell_price}</td>
                     <td className="px-4 py-2 border">{p.date}</td>
                     <td className="px-4 py-2 border">{p.category}</td>
                   </tr>
-                )) */}
-              {/* )} */}
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -1,5 +1,29 @@
-from sqlalchemy import Column, Integer, String, Float, Date
-from .database import Base
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy.orm import relationship
+from .database import Base # Changed back to relative import
+
+class Store(Base):
+    __tablename__ = "stores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False) # Reverted from storename back to name
+    users = relationship("User", back_populates="store")
+    products = relationship("Product", back_populates="store")
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=True)  # Required for admins, optional for employees
+    phone_number = Column(String, nullable=True)
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    store_name = Column(String, nullable=True) # This can still be useful on User model for convenience
+    hashed_password = Column(String, nullable=False) # Changed from password_hash
+    role = Column(String, nullable=False)  # User role: 'admin' or 'employee'
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
+    store = relationship("Store", back_populates="users")
+    sales = relationship("Sale", back_populates="user")
 
 class Product(Base):
     __tablename__ = "products"
@@ -9,6 +33,21 @@ class Product(Base):
     category = Column(String, nullable=False)
     purchase_price = Column(Float, nullable=False)
     quantity = Column(Integer, nullable=False)
-    sell_price = Column(Float, nullable=False)
+    # sell_price = Column(Float, nullable=False)
+    max_sell_price = Column(Float, nullable=False)
     date = Column(Date, nullable=False)
     net_profit = Column(Float, nullable=False)
+    store_id = Column(Integer, ForeignKey("stores.id"), nullable=False)
+    store = relationship("Store", back_populates="products")
+    sales = relationship("Sale", back_populates="product")
+
+class Sale(Base):
+    __tablename__ = "sales"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    timestamp = Column(Date, nullable=False)
+    product = relationship("Product", back_populates="sales")
+    user = relationship("User", back_populates="sales")

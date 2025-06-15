@@ -15,18 +15,18 @@ export async function PATCH(req) {
     }
 
     const body = await req.json();
-    const { id, ...updateFields } = body;
+    const { product_id, ...updateFields } = body;
 
-    if (!id) {
-      return new Response(JSON.stringify({ error: "Missing vehicle_id" }), {
+    if (!product_id) {
+      return new Response(JSON.stringify({ error: "Missing product id" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     const validFields = [
-      "product_name",
-      "sell_price",
+      "name",
+      "max_sell_price",
       "purchase_price",
       "quantity",
       "category",
@@ -42,7 +42,7 @@ export async function PATCH(req) {
     }
 
     const response = await axios.patch(
-      `${API_BASE_URL}${API_ENDPOINTS.EDIT_VEHICLE}/${id}/`,
+      `${API_BASE_URL}${API_ENDPOINTS.UPDATE_PRODUCT}/${product_id}/`,
       payload,
       {
         headers: {
@@ -52,13 +52,19 @@ export async function PATCH(req) {
         },
       }
     );
+    if (response.status !== 200) {
+      return new Response(
+        JSON.stringify({ error: "Failed to update product" }),
+        { status: response.status, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     return new Response(JSON.stringify(response.data), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error updating vehicle:", error.message);
+    console.error("Error updating product:", error.message);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

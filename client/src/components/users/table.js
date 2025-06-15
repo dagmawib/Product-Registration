@@ -1,6 +1,10 @@
 export default function UsersTable({ users = [] }) {
   return (
+<<<<<<< HEAD
+    <div className="overflow-x-auto mt-8 max-w-4xl mx-auto  rounded shadow">
+=======
     <div className="overflow-x-auto mt-8 max-w-4xl mx-2 md:mx-auto  rounded shadow">
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
       <table className=" min-w-full bg-white border border-gray-200 rounded shadow">
         <thead className="bg-[#C69950] text-white">
           <tr>

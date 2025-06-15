@@ -23,6 +23,8 @@ export default function UsersPage() {
       phone: "9876543210",
       address: "456 Elm St",
     },
+<<<<<<< HEAD
+=======
     {
       first_name: " Doe",
       last_name: "John",
@@ -36,6 +38,7 @@ export default function UsersPage() {
       address: "456 Elm St",
     },
     
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
   ]);
 
   const handleChange = (e) => {
@@ -50,6 +53,13 @@ export default function UsersPage() {
 
   return (
     <>
+<<<<<<< HEAD
+      <div className="max-w-md mx-auto mt-2 bg-[#0C1825] p-6 rounded shadow">
+        <h1 className="text-2xl font-bold mb-6 text-white">
+          Register Employee
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+=======
       <div className="max-w-4xl md:mx-auto mt-2 bg-[#0C1825] p-6 mx-2 rounded shadow">
         <h1 className="text-2xl font-bold mb-6 text-white">
           Register Employee
@@ -58,6 +68,7 @@ export default function UsersPage() {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white"
         >
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
           <input
             type="text"
             name="first_name"
@@ -90,6 +101,16 @@ export default function UsersPage() {
             placeholder="Address"
             className="border rounded px-4 py-2 w-full"
           />
+<<<<<<< HEAD
+          <button
+            type="submit"
+            className="bg-[#C69950] text-white font-bold rounded px-4 py-2 w-full hover:bg-[#c6c450]"
+          >
+            Register
+          </button>
+        </form>
+      </div>
+=======
           <div className="col-span-1 md:col-span-2 flex justify-center md:justify-end mt-4">
             <button
               type="submit"
@@ -101,6 +122,7 @@ export default function UsersPage() {
         </form>
       </div>
 
+>>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
       <UsersTable users={users} />
     </>
   );
