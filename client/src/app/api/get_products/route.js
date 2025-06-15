@@ -24,7 +24,6 @@ export async function GET(req) {
         },
       }
     );
-console.log("Response:", response.data);
 
     return new Response(JSON.stringify(response.data), {
       status: 200,

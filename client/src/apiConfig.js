@@ -8,7 +8,7 @@ const API_ENDPOINTS = {
     ADD_SOLD_PRODUCT: "/sold",
     GET_PRODUCTS: "/products/",
     GET_SOLD_PRODUCTS: "/sold",
-    UPDATE_PRODUCT: "/products/",
+    UPDATE_PRODUCT: "/products",
     DELETE_PRODUCT: "/products/",
 }
 

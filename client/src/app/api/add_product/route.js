@@ -27,14 +27,11 @@ export const POST = async (req) => {
       name,
       max_sell_price: parsedSellPrice,
       purchase_price: parsedPurchasePrice,
-      quantity_available: parsedQuantity,
+      quantity: parsedQuantity,
       category,
       date,
-      store_id: 1, 
+      store_id: 3, 
     };
-
-    console.log("Request Body:", requestBody);
-    console.log(`${API_BASE_URL}${API_ENDPOINTS.ADD_PRODUCT}`);
 
     // Make the POST request to the token API
     const response = await axios.post(
@@ -48,7 +45,7 @@ export const POST = async (req) => {
         },
       }
     );
-    console.log("Response:", response.data);
+
 
     return new Response(JSON.stringify(response.data), {
       status: response.status,
