@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 import logging
 
-from .. import models, schemas
-from ..dependencies import auth_deps
+import models
+import schemas
+from dependencies import auth_deps
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

@@ -4,10 +4,12 @@ from fastapi.security import OAuth2PasswordRequestForm # Added back this import
 from sqlalchemy.orm import Session
 from typing import Any, Optional, Union # Added Union
 
-from .. import schemas, models, database
-from ..dependencies import auth_deps
-from ..auth_utils import security
-from ..core import config
+import schemas
+import models
+import database
+from dependencies import auth_deps
+from auth_utils import security
+from core import config
 import logging
 
 logger = logging.getLogger(__name__)

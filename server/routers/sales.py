@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import date
 
-from .. import schemas, models
-from ..dependencies import auth_deps
+import schemas
+import models
+from dependencies import auth_deps
 import logging # Added logging
 
 logger = logging.getLogger(__name__) # Added logger
