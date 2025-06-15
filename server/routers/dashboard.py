@@ -2,49 +2,48 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from typing import Dict, Any
 import logging
 
-from .. import models, schemas # Assuming schemas.py will have DashboardMetrics
+from .. import models, schemas
 from ..dependencies import auth_deps
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@router.get("/metrics", response_model=schemas.DashboardMetrics) # Define DashboardMetrics in schemas.py
+@router.get("/metrics", response_model=schemas.DashboardMetrics)
 async def get_dashboard_metrics(
     db: Session = Depends(auth_deps.get_db),
-    current_user: models.User = Depends(auth_deps.admin_required) # Metrics usually for admins
-) -> Dict[str, Any]:
-    logger.info(f"Admin {current_user.email} requesting dashboard metrics.")
+    current_user: models.User = Depends(auth_deps.admin_required) # Metrics for admins
+):
+    logger.info(f"Admin {current_user.email} (store {current_user.store_id}) requesting dashboard metrics.")
+    
+    store_id = current_user.store_id
+
     try:
-        total_products = db.query(func.count(models.Product.id)).scalar()
-        total_sales_volume = db.query(func.sum(models.SoldProduct.sale_price * models.SoldProduct.quantity_sold)).scalar() or 0
-        total_units_sold = db.query(func.sum(models.SoldProduct.quantity_sold)).scalar() or 0
-        
-        # Ensure User model has 'role' attribute for this query to work
-        total_employees = db.query(func.count(models.User.id)).filter(models.User.role == 'employee').scalar()
-        
-        # Fallback for total_sales_volume and total_units_sold if they are None (e.g., no sales yet)
-        total_sales_volume = total_sales_volume if total_sales_volume is not None else 0.0
-        total_units_sold = total_units_sold if total_units_sold is not None else 0
+        # Total products in the admin's store
+        total_products = db.query(func.count(models.Product.id)).filter(models.Product.store_id == store_id).scalar() or 0
 
-        logger.info(f"Metrics calculated: Products={total_products}, SalesVol={total_sales_volume}, UnitsSold={total_units_sold}, Employees={total_employees}")
+        # Total items sold in the admin's store
+        total_sold_items = db.query(func.sum(models.Sale.quantity)).filter(models.Sale.store_id == store_id).scalar() or 0
+        
+        # Total sales value in the admin's store
+        # This assumes sales occur at product.max_sell_price
+        # Sum of (sale.quantity * product.max_sell_price) for each sale
+        query_total_sales_value = (
+            db.query(func.sum(models.Sale.quantity * models.Product.max_sell_price))
+            .join(models.Product, models.Sale.product_id == models.Product.id)
+            .filter(models.Sale.store_id == store_id)
+        )
+        total_sales_value = query_total_sales_value.scalar() or 0.0
 
-        return {
-            "total_products": total_products,
-            "total_sales_volume": round(total_sales_volume, 2),
-            "total_units_sold": total_units_sold,
-            "total_employees": total_employees
-            # Add more metrics as needed, e.g., sales_by_store, top_selling_products
-        }
+        logger.info(f"Metrics for store {store_id}: Products={total_products}, SalesValue={total_sales_value}, SoldItems={total_sold_items}")
+
+        return schemas.DashboardMetrics(
+            total_products=total_products,
+            total_sales_value=round(total_sales_value, 2),
+            total_sold_items=total_sold_items
+        )
     except Exception as e:
-        logger.error(f"Error calculating dashboard metrics: {e}", exc_info=True)
-        # Consider re-raising or returning a more specific error response
-        # For now, returning zeros or error indicators might be an option,
-        # but a 500 error from FastAPI due to an unhandled exception here is also possible.
-        # Depending on requirements, you might want to return a 200 with error flags or default values.
-        # For simplicity, if an error occurs, it will likely result in a 500 if not caught by FastAPI's error handling.
-        # A more robust solution would catch specific database errors or calculation issues.
-        # Re-raising to let FastAPI handle it as a 500 Internal Server Error:
-        raise # This will make FastAPI return a 500 error if an exception occurs.
+        logger.error(f"Error calculating dashboard metrics for store {store_id}: {e}", exc_info=True)
+        # Re-raise to let FastAPI handle it as a 500 Internal Server Error
+        raise
