@@ -3,9 +3,9 @@ import os
 
 # IMPORTANT: Change this in production!
 # You can use environment variables for these settings for better security.
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-please-change-me-in-production")
+SECRET_KEY = os.getenv("SECRET_KEY", "dagiandmikessecretkey")  # Change this to a strong secret key
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 # Token validity period in minutes
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30  # Token validity period in minutes (1 month)
 
 # Database URL (Example for PostgreSQL)
 # DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@host:port/dbname")
