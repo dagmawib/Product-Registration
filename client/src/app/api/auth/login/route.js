@@ -4,30 +4,33 @@ import { API_BASE_URL, API_ENDPOINTS } from "@/apiConfig";
 export const POST = async (req) => {
   try {
     const body = await req.json();
-    const { username, password } = body;
+    const { email, password } = body;
 
-    if (!username || !password) {
+    if (!email || !password) {
       return new Response(
-        JSON.stringify({ error: "Username and password are required" }),
+        JSON.stringify({ error: "Email and password are required" }),
         { status: 400 }
       );
     }
 
     const requestBody = {
-      username,
+      email,
       password,
     };
+    console.log("Request body for login:", requestBody);
     
     const response = await axios.post(
       `${API_BASE_URL}${API_ENDPOINTS.LOGIN}`,
       requestBody,
       {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
           Accept: "application/json",
         },
       }
     );
+    console.log("Login response:", response.data);
+
   
     return new Response(JSON.stringify(response.data), {
         status: response.status,
