@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
-from . import models, database # Assuming models and database are correctly set up
-from .routers import auth, products, sales, dashboard # Import routers
-from .core import config # Import config
+# Changed to absolute imports assuming 'server' is the root for Vercel
+import models
+import database 
+from routers import auth, products, sales, dashboard
+from core import config
 
-models.Base.metadata.create_all(bind=database.engine)
+# models.Base.metadata.create_all(bind=database.engine) # Commented out for Vercel deployment
 
 app = FastAPI()
 
@@ -37,4 +39,4 @@ async def root():
 
 # Ensure any remaining specific endpoint logic previously in main.py is moved to appropriate routers.
 # For example, if there were any root-level endpoints or general utility endpoints not fitting elsewhere.
-# Based on the refactoring, most logic should now reside in the 'routers' modules.
+# Based on the refactoring, most logic should now reside in the 'routers' modules
