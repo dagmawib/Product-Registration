@@ -17,7 +17,6 @@ export const POST = async (req) => {
       email,
       password,
     };
-    console.log("Request body for login:", requestBody);
     
     const response = await axios.post(
       `${API_BASE_URL}${API_ENDPOINTS.LOGIN}`,
@@ -29,7 +28,6 @@ export const POST = async (req) => {
         },
       }
     );
-    console.log("Login response:", response.data);
 
   
     return new Response(JSON.stringify(response.data), {
