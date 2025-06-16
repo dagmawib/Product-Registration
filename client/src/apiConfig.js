@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://product-registration-c0zf.onrender.com";
 
 // API endpoints
 const API_ENDPOINTS = {
