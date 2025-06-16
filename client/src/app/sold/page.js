@@ -29,11 +29,7 @@ export default function SoldPage() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="max-w-4xl mx-auto mt-2 p-6 bg-[#0C1825] rounded shadow text-white">
-=======
-    <div className="max-w-4xl mx-2 md:mx-auto mt-2 p-6 bg-[#0C1825] rounded shadow text-white">
->>>>>>> bfe956ed8a672f2c4e9d7dcf69518bb3b353fe69
       <Toaster position="top-right" />
       <h1 className="text-2xl font-bold mb-6 text-white">Sold Products</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
