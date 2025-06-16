@@ -3,6 +3,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import ProductTable from "@/components/table";
 import { toast, Toaster } from "react-hot-toast";
+import { Icon } from "@iconify/react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -89,7 +90,7 @@ export default function Page() {
           value={form.name}
           onChange={handleChange}
           placeholder="Product Name"
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         />
         <input
           type="number"
@@ -97,7 +98,7 @@ export default function Page() {
           value={form.purchase_price}
           onChange={handleChange}
           placeholder="Purchase Price"
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         />
         <input
           type="number"
@@ -105,7 +106,7 @@ export default function Page() {
           value={form.quantity}
           onChange={handleChange}
           placeholder="Quantity"
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         />
         <input
           type="number"
@@ -113,14 +114,14 @@ export default function Page() {
           value={form.max_sell_price}
           onChange={handleChange}
           placeholder="Max Sell Price"
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         />
         {/* Category Dropdown moved next to Sell Price */}
         <select
           name="category"
           value={form.category}
           onChange={handleChange}
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         >
           <option value="">Select Category</option>
           <option value="Electronics" className="text-black">
@@ -145,13 +146,26 @@ export default function Page() {
           value={form.date}
           onChange={handleChange}
           placeholder="Date"
-          className="border rounded px-4 py-2"
+          className="border-1 border-gray-700 rounded px-4 py-2"
         />
-        <button
-          type="submit"
-          className="bg-[#C69950] text-white font-bold rounded px-4 py-2 hover:bg-[#c6c450] md:col-span-2"
-        >
-          Add Product
+
+        <button class="group relative outline-0 bg-sky-200 w-full md:w-1/2 h-12 border border-solid border-transparent rounded-xl flex items-center justify-center cursor-pointer transition-transform duration-200 active:scale-[0.95] bg-[linear-gradient(45deg,#efad21,#ffd60f)] [box-shadow:#3c40434d_0_1px_2px_0,#3c404326_0_2px_6px_2px,#0000004d_0_30px_60px_-30px,#34343459_0_-2px_6px_0_inset]">
+          <svg
+            class="animate-pulse absolute z-10 overflow-visible transition-all duration-300 text-[#ffea50] group-hover:text-white left-2 top-1/2 -translate-y-1/2 h-5 w-5 group-hover:h-6 group-hover:w-6"
+            stroke="none"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5z"
+            ></path>
+          </svg>
+
+          <span class="text-white font-extrabold leading-none text-base transform transition-all duration-300 pl-8 group-hover:translate-x-2 group-hover:opacity-60">
+            Add Product
+          </span>
         </button>
       </form>
       <h2 className="text-xl font-bold mb-4 text-white">Product List</h2>

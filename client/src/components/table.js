@@ -48,12 +48,12 @@ export default function ProductTable({ products, setProducts }) {
             placeholder="Search by name or category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border rounded px-4 py-2 w-full md:w-1/3"
+            className="border-1 border-gray-700 rounded px-4 py-2 w-full md:w-1/3"
           />
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border rounded px-4 py-2 w-full md:w-1/4"
+            className="border-1 border-gray-700 rounded px-4 py-2 w-full md:w-1/4"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -68,21 +68,21 @@ export default function ProductTable({ products, setProducts }) {
               setSearch("");
               setCategoryFilter("");
             }}
-            className="rounded px-4 py-1 border  text-white font-semibold hover:bg-[#C69950] w-full md:w-auto"
+            className="rounded px-4 py-1 border-1 border-gray-700 text-white font-semibold hover:bg-[#efad21] w-full md:w-auto"
           >
             Clear
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-[#0C1825] border border-gray-200 rounded shadow">
-            <thead className="bg-[#C69950] text-white">
+          <table className="min-w-full bg-[#0C1825] border-1 border-gray-700 rounded shadow">
+            <thead className="bg-[#efad21] text-white">
               <tr>
-                <th className="text-left px-4 py-2 border">Name</th>
-                <th className="text-left px-4 py-2 border">Purchase Price</th>
-                <th className="text-left px-4 py-2 border">Quantity</th>
-                <th className="text-left px-4 py-2 border">Sell Price</th>
-                <th className="text-left px-4 py-2 border">Date</th>
-                <th className="text-left px-4 py-2 border">Category</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Name</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Purchase Price</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Quantity</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Sell Price</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Date</th>
+                <th className="text-left px-4 py-2 border-1 border-gray-700">Category</th>
               </tr>
             </thead>
             <tbody>
@@ -102,12 +102,12 @@ export default function ProductTable({ products, setProducts }) {
                     className="border-t text-white"
                     onClick={() => openModal(p)}
                   >
-                    <td className="px-4 py-2 border">{p.name}</td>
-                    <td className="px-4 py-2 border">{p.purchase_price}</td>
-                    <td className="px-4 py-2 border">{p.quantity}</td>
-                    <td className="px-4 py-2 border">{p.min_sell_price} - {p.max_sell_price}</td>
-                    <td className="px-4 py-2 border">{p.date}</td>
-                    <td className="px-4 py-2 border">{p.category}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.name}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.purchase_price}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.quantity}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.min_sell_price} - {p.max_sell_price}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.date}</td>
+                    <td className="px-4 py-2 border-1 border-gray-700">{p.category}</td>
                   </tr>
                 ))
               )}
