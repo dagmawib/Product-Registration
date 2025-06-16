@@ -7,6 +7,20 @@ from sqlalchemy import pool
 
 from alembic import context
 
+# Add the project root directory (parent of 'server') to sys.path
+# os.path.dirname(__file__) is server/alembic
+# os.path.join(..., '..') is server/
+# os.path.join(..., '..', '..') is the project root (e.g., Product-Registration)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+# Now import Base and models using the 'server' package
+from server.database import Base  # Imports server.database.Base
+# Import all model modules from server.models to ensure they are registered with Base
+# Assuming your models are defined in server/models.py
+from server import models # This ensures server.models is loaded
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -16,21 +30,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Add the project's root directory to the Python path
-# to allow Alembic to find the models and database modules.
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-from database import Base  # Import Base from your database.py
-import models  # Import all your models
-
+# Set target_metadata to your Base metadata
 target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:
