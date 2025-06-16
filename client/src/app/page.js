@@ -4,12 +4,13 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import withAuth from "@/withAuth";
 import { toast } from "react-hot-toast";
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Home() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -19,7 +20,7 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -43,6 +44,7 @@ function Home() {
           pauseOnHover: true,
           draggable: true,
         });
+        setLoading(false);
         return;
       }
 
@@ -54,6 +56,7 @@ function Home() {
       }
     } catch (err) {
       setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -102,9 +105,16 @@ function Home() {
 
           <button
             type="submit"
-            className="w-full bg-[#C99346] text-white font-semibold py-2 rounded-lg hover:opacity-90 transition"
+            className="w-full bg-[#efad21] text-white font-semibold py-2 rounded-lg hover:opacity-90 transition flex items-center justify-center"
+            disabled={loading}
           >
-            Login
+            {loading ? (
+              <>
+                <CircularProgress size={22} color="inherit" className="mr-2" />
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 
